@@ -1,0 +1,36 @@
+{
+  "name": "node-hosted-agent",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/ScreepsPlus/node-hosted-agent",
+  "author": "Adam Shumann <ashumann13@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "standard src",
+    "start": "node app.js",
+    "2npm": "publish",
+    "build": "rollup -c"
+  },
+  "bin": {
+    "screepsplus-hosted-agent": "dist/index.js"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "bluebird": "^3.5.1",
+    "fs-router": "^0.4.1",
+    "micro": "^9.1.4",
+    "screeps-api": "^1.4.0",
+    "sequelize": "^4.37.1",
+    "sqlite3": "^4.0.0"
+  },
+  "devDependencies": {
+    "micro-dev": "^2.2.1",
+    "publish": "^0.6.0",
+    "rollup": "^0.57.0",
+    "rollup-plugin-commonjs": "^9.1.0",
+    "rollup-plugin-node-builtins": "^2.1.2",
+    "rollup-plugin-node-resolve": "^3.2.0",
+    "rollup-watch": "^4.3.1",
+    "standard": "^11.0.1"
+  }
+}
