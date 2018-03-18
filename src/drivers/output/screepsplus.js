@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Agent } from 'http'
 
-let http = axios.defaults({
+let http = axios.create({
   url: 'https://screepspl.us/api/stats/submit',
   httpAgent: new Agent({ keepAlive: true })
 })

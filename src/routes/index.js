@@ -1,7 +1,13 @@
 import { json } from 'micro'
+import dispatch from 'micro-route/dispatch'
 
-export async function GET (req, res) {
-  if (!req.query.token) {
+export default dispatch()
+  .dispatch('/agent', 'GET', getRecord)
+  .dispatch('/agent', 'POST', createRecord)
+  .dispatch('/agent/Lud', 'DELETE', deleteRecord)
+
+async function getRecord (req, res, { query }) {
+  if (!query.token) {
     return []
   }
   let records = await req.db.Config.findAll({ screepsplusToken: req.token })
@@ -9,14 +15,14 @@ export async function GET (req, res) {
   return records
 }
 
-export async function POST (req, res) {
+async function createRecord (req, res) {
   let config = await json(req)
   let record = await req.db.Config.create(config)
   return cleanRecord(record)
 }
 
-export async function DELETE (req, res) {
-  if (!req.query.token || !req.token.pk) {
+async function deleteRecord (req, res, { query, params }) {
+  if (!query.token || !params.pk) {
     return { error: 'Must provide token and pk' }
   }
 }

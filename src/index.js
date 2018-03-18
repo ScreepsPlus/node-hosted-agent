@@ -1,12 +1,10 @@
-import { send } from 'micro'
 import path from 'path'
-import fsRouter from 'fs-router'
 import Sequelize from 'sequelize'
+
+import routes from './routes'
 
 import WorkManager from './work-manager'
 import ConfigModel from './models/config'
-
-const match = fsRouter(path.join(__dirname, 'routes'))
 
 const sequelize = new Sequelize('agent', 'username', null, {
   operatorsAliases: false,
@@ -33,19 +31,11 @@ async function setup (fn) {
     return fn(req, res)
   }
 }
-
-export default setup(async (req, res) => {
-  let matched = match(req)
-  if (matched) {
-    let ret = await matched(req, res)
-    if (ret) send(res, 200, ret)
-    return
-  }
-  send(res, 404, { error: 'Not found' })
-})
+module.exports = setup(routes)
 
 async function startAll () {
-  let configs = Config.findAll()
+  let configs = await Config.findAll()
+  console.log(configs)
   configs.forEach(async config => {
     try {
       await workManager.createWorker(config)

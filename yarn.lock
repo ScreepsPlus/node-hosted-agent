@@ -2683,6 +2683,12 @@ micro-dev@^2.2.1:
     pretty-error "2.1.1"
     string-length "2.0.0"
 
+micro-route@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/micro-route/-/micro-route-2.5.0.tgz#4d966b7c9803bbfe085f5e5514389be2d736e5d3"
+  dependencies:
+    url-pattern "^1.0.3"
+
 micro@9.1.0:
   version "9.1.0"
   resolved "https://registry.yarnpkg.com/micro/-/micro-9.1.0.tgz#f2effba306639076e994c007c327dfc36a5185e9"
@@ -4639,6 +4645,10 @@ unzip-response@^1.0.0:
 urix@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/urix/-/urix-0.1.0.tgz#da937f7a62e21fec1fd18d49b35c2935067a6c72"
+
+url-pattern@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/url-pattern/-/url-pattern-1.0.3.tgz#0409292471b24f23c50d65a47931793d2b5acfc1"
 
 use@^3.1.0:
   version "3.1.0"

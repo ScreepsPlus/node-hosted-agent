@@ -1,7 +1,7 @@
 // rollup.config.js
 // import commonjs from 'rollup-plugin-commonjs'
 import resolve from 'rollup-plugin-node-resolve'
-import builtins from 'rollup-plugin-node-builtins'
+// import builtins from 'rollup-plugin-node-builtins'
 
 export default {
   experimentalCodeSplitting: true,
@@ -12,13 +12,14 @@ export default {
     exports: 'named',
     sourcemap: true
   },
-  external: ['events', 'path', 'ws', 'node-fetch'],
+  external: [], // 'screeps-api', 'axios', 'events', 'path', 'ws', 'node-fetch'],
   plugins: [
-    builtins(),
+    // builtins(),
     resolve({
       module: true,
-      main: false,
+      main: true,
       modulesOnly: true,
+      jail: __dirname + '/src',
       preferBuiltins: true
     })
   ]
