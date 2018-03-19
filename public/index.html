@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+  <head>
+    <meta charset="UTF-8">
+    <title>ScreepsPlus Hosted Agent</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
+  </head>
+  <body>
+    <div ng-controller="MainController as main">
+      <div ng-if="conf.method === 'console'">
+        <label>ScreepsPlus Token</label>
+        <input ng-model="main.screepsPlusToken">
+      </div>
+      <button ng-click="main.getList()">Load List</button>
+      <div ng-repeat="conf in main.configs">
+        <div ng-if="conf.method === 'console'">
+          <label>Screeps Token</label>
+          <input ng-model="conf.screepsToken">
+        </div>
+        <div>
+          <label>Method</label>
+          <select ng-model="conf.method">
+            <option value="memory">Memory</option>
+            <option value="console">Console</option>
+          </select>
+        </div>
+        <div ng-if="conf.method === 'console'">
+          <label>Shard (Blank for all)</label>
+          <input ng-model="conf.methodOptions.shard">
+        </div>
+        <div ng-if="conf.method === 'memory'">
+          <label>Shard</label>
+          <input ng-model="conf.methodOptions.shard">
+        </div>
+        <div ng-if="conf.method === 'memory'">
+          <label>Path</label>
+          <input ng-model="conf.methodOptions.path">
+        </div>
+        <div ng-if="conf.method === 'memory'">
+          <label>Segment</label>
+          <input ng-model="conf.methodOptions.segment">
+        </div>
+        <div ng-if="conf.method === 'memory'">
+          <label>Interval (Should be 60 for Memory, 15 for segment)</label>
+          <input type="number" ng-model="conf.methodOptions.interval" value="60">
+        </div>
+      </div>
+    </div>
+    <script>
+      (function () {
+        const app = angular.module('app', [])
+
+        class MainController {
+          static get $inject () {
+            return ['$http']
+          }
+          constructor (http) {
+            this.http = http
+            this.configs = []
+          }
+          create () {
+            this.configs.push({
+              screepsPlusToken: this.screepsPlusToken,
+              screepsToken: '',
+              method: 'memory',
+              methodOptions: {
+                shard: 'shard0',
+                path: 'stats',
+                segment: '',
+                interval: 60
+              },
+              create: true
+            })
+          }
+          getList () {
+            if (!this.token) return
+            this.http.get('/agent', { token: this.screepsPlusToken })
+              .then(configs => (this.configs = configs))
+          }
+          update () {
+            let ps = this.configs.map(config => {
+              if (config.delete) {
+                return this.http.delete(`/agent/${config.pk}`)
+              } else if (config.update) {
+                return this.http.post(`/agent/${config.pk}`, config)
+              } else if (config.create) {
+                return this.http.post(`/agent`, config)
+              }
+            })
+            return Promise.all(ps)
+          }
+        }
+        app.controller('MainController', MainController)
+      })()
+    </script>
+  </body>
+</html>
