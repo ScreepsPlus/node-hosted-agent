@@ -35,7 +35,6 @@ module.exports = setup(routes)
 
 async function startAll () {
   let configs = await Config.findAll()
-  console.log(configs)
   configs.forEach(async config => {
     try {
       await workManager.createWorker(config)

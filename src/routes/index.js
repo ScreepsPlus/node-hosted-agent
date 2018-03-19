@@ -1,34 +1,47 @@
-import { json } from 'micro'
+import { json, send } from 'micro'
 import dispatch from 'micro-route/dispatch'
 
 export default dispatch()
   .dispatch('/agent', 'GET', getRecord)
   .dispatch('/agent', 'POST', createRecord)
-  .dispatch('/agent/Lud', 'DELETE', deleteRecord)
+  .dispatch('/agent/:pk', 'POST', updateRecord)
+  .dispatch('/agent/:pk', 'DELETE', deleteRecord)
+  .dispatch('*', '*', (req, res) => send(res, 404, { error: 'Not Found' }))
 
-async function getRecord (req, res, { query }) {
-  if (!query.token) {
+async function getRecord (req, res, { query: { token: screepsPlusToken } }) {
+  if (!screepsPlusToken) {
     return []
   }
-  let records = await req.db.Config.findAll({ screepsplusToken: req.token })
-  records.forEach(cleanRecord)
-  return records
+  let records = await req.db.Config.findAll({ where: { screepsPlusToken } })
+  return records.map(cleanRecord)
 }
 
 async function createRecord (req, res) {
   let config = await json(req)
   let record = await req.db.Config.create(config)
+  await req.workManager.createWorker(record)
   return cleanRecord(record)
 }
 
-async function deleteRecord (req, res, { query, params }) {
-  if (!query.token || !params.pk) {
+async function updateRecord (req, res) {
+  let config = await json(req)
+  let record = await req.db.Config.update(config, { where: { pk: config.pk } })
+  await req.workManager.destroyWorker({ pk: config.pk })
+  await req.workManager.createWorker(config)
+  return cleanRecord(record)
+}
+
+async function deleteRecord (req, res, { params: { pk } = {} }) {
+  if (!pk) {
     return { error: 'Must provide token and pk' }
   }
+  await req.workManager.destroyWorker(pk)
+  let cnt = await req.db.Config.destroy({ where: { pk } })
+  return { deleted: cnt }
 }
 
 function cleanRecord (rec) {
-  delete rec.screepsplusToken
-  delete rec.screepsToken
+  rec.screepsPlusToken = true
+  rec.screepsToken = true
   return rec
 }

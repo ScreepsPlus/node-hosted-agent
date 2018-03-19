@@ -7,6 +7,7 @@ export default class Console extends EventEmitter {
   }
 
   async start (config = {}) {
+    this.config = config
     await this.api.socket.connect()
     console.log('Connected')
     await this.api.socket.subscribe('console')
@@ -15,11 +16,12 @@ export default class Console extends EventEmitter {
   }
 
   async stop () {
-    this.api.socket.removeEventListener('console')
+    this.api.socket.removeAllListeners('console')
     await this.api.socket.unsubscribe('console')
   }
 
-  handleConsole ({ data: { shard = 'shard0', messages: { log = [] } = {}} = {}} = {}) {
+  handleConsole ({ data: { shard = 'shard0', messages: { log = [] } = {} } = {} } = {}) {
+    if (this.config.shard && shard !== this.config.shard) return
     log
       .filter(l => l.startsWith('STATS'))
       .map(log => log.slice(6).replace(/;/g, '\n'))

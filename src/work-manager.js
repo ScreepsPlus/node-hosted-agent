@@ -10,12 +10,14 @@ export default class WorkManager {
     if (this.workers[config.pk]) {
       await this.destroyWorker(config.pk)
     }
+    let conf = config.methodConfig || {}
     const api = new ScreepsAPI({ token: config.screepsToken })
-    const driver = new drivers.input[config.method](api)
+    const driver = new drivers.input[config.method](api, conf)
+    let { screepsPlusToken } = config
     driver.on('stats', async (stats) => {
       try {
         stats = await this.formatStats(stats)
-        await this.output({ token: config.screepsPlusToken }, stats)
+        await this.output({ token: screepsPlusToken }, stats)
       } catch (e) {
         console.error(`Error handling stats for ${config.pk}`, e)
       }
@@ -28,8 +30,12 @@ export default class WorkManager {
     }
   }
   async destroyWorker (pk) {
-    let { driver } = this.workers[pk]
-    await driver.stop()
+    let { driver } = this.workers[pk] || {}
+    if (driver) {
+      console.log('Stopping Worker')
+      await driver.stop()
+      delete this.workers[pk]
+    }
   }
   async formatStats (data) {
     if (data[0] === '{') data = JSON.parse(data)
