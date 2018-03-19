@@ -1,5 +1,6 @@
 import { json, send } from 'micro'
 import dispatch from 'micro-route/dispatch'
+import fs from 'fs'
 
 const AGENT_LIMIT = 5
 
@@ -8,6 +9,7 @@ export default dispatch()
   .dispatch('/agent', 'POST', createRecord)
   .dispatch('/agent/:pk', 'POST', updateRecord)
   .dispatch('/agent/:pk', 'DELETE', deleteRecord)
+  .dispatch('/', 'GET', (req, res) => fs.createReadStream('../public/index.html'))
   .dispatch('*', '*', (req, res) => send(res, 404, { error: 'Not Found' }))
 
 async function getRecord (req, res, { query: { token: screepsPlusToken } }) {
