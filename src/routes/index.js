@@ -1,6 +1,8 @@
 import { json, send } from 'micro'
 import dispatch from 'micro-route/dispatch'
 
+const AGENT_LIMIT = 5
+
 export default dispatch()
   .dispatch('/agent', 'GET', getRecord)
   .dispatch('/agent', 'POST', createRecord)
@@ -18,6 +20,8 @@ async function getRecord (req, res, { query: { token: screepsPlusToken } }) {
 
 async function createRecord (req, res) {
   let config = await json(req)
+  let cnt = await req.db.Config.count({ where: { screepsPlusToken: config.screepsPlusToken } })
+  if (cnt > AGENT_LIMIT) return send(403, { error: 'Agent Limit Reached' })
   let record = await req.db.Config.create(config)
   await req.workManager.createWorker(record)
   return cleanRecord(record)
