@@ -4,25 +4,25 @@ import drivers from './drivers'
 export default class WorkManager {
   constructor () {
     this.workers = {}
-    this.output = drivers.output.ScreepsPlus
+    this.output = drivers.output.Graphite
   }
   async createWorker (config) {
     if (this.workers[config.pk]) {
       await this.destroyWorker(config.pk)
     }
+    console.log(config.methodConfig)
     let conf = config.methodConfig || {}
-    const api = new ScreepsAPI({ token: config.screepsToken })
+    const api = new ScreepsAPI(config.screepsAPIConfig)
     const driver = new drivers.input[config.method](api, conf)
-    let { screepsPlusToken } = config
     driver.on('stats', async (stats) => {
       try {
         stats = await this.formatStats(stats)
-        await this.output({ token: screepsPlusToken }, stats)
+        await this.output({ username: config.username, prefix: conf.prefix }, stats)
       } catch (e) {
         console.error(`Error handling stats for ${config.pk}`, e)
       }
     })
-    await driver.start(config.screeps)
+    await driver.start(conf)
     this.workers[config.pk] = {
       api,
       driver,

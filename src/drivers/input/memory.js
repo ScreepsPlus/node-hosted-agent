@@ -6,7 +6,8 @@ export default class Memory extends EventEmitter {
     this.api = api
   }
 
-  async start ({ shard = 'shard0', path = 'stats', segment, interval = 60 }) {
+  async start ({ shard, path, segment, interval }) {
+    console.log(path)
     await this.stop()
     this.interval = setInterval(() => this.tick(path, shard, segment), interval * 1000)
   }
@@ -18,7 +19,7 @@ export default class Memory extends EventEmitter {
   async tick (path, shard, segment) {
     try {
       let ret
-      if (typeof segment !== 'undefined') {
+      if (segment) {
         ret = await this.api.memory.segment.get(segment, shard)
       } else {
         ret = await this.api.memory.get(path, shard)

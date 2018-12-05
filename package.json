@@ -21,6 +21,7 @@
     "fs-router": "^0.4.1",
     "micro": "^9.1.4",
     "micro-route": "^2.5.0",
+    "mysql2": "^1.6.4",
     "screeps-api": "^1.4.0",
     "sequelize": "^4.37.1",
     "sqlite3": "^4.0.0"

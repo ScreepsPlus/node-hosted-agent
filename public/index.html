@@ -73,9 +73,8 @@
             })
           }
           getList () {
-            if (!this.token) return
             this.http.get('/agent', { token: this.screepsPlusToken })
-              .then(configs => (this.configs = configs))
+              .then(({ data: configs }) => (this.configs = configs))
           }
           update () {
             let ps = this.configs.map(config => {

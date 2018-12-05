@@ -1,0 +1,54 @@
+version: '3'
+services:
+  hosted-agent:
+    build: ./
+    image: ags131/hosted-agent
+    command:
+    - yarn
+    - dev
+    environment:
+      GRAPHITE_HOST: 'go-carbon'
+      DB_DIALECT: mysql
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASS: testing
+      DB_DATABASE: agent
+    volumes:
+    - './:/app'
+    ports:
+    - '8080:8080'
+    restart: unless-stopped
+  carbonapi:
+    image: ags131/carbonapi
+    restart: unless-stopped
+  go-carbon:
+    image: ags131/go-carbon
+    volumes:
+    - './data/go-carbon/storage:/var/lib/graphite/storage'
+    restart: unless-stopped
+  grafana:
+    image: grafana/grafana
+    volumes:
+    - './data/grafana:/var/lib/grafana'
+    restart: unless-stopped
+    ports:
+    - '3000:3000'
+  influxdb:
+    image: influxdb
+    volumes:
+      - './data/influxdb:/var/lib/influxdb'
+    restart: unless-stopped
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - './data/mysql:/var/lib/mysql'
+    environment:
+      MYSQL_ROOT_PASSWORD: testing
+    restart: unless-stopped
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: mysql
+    restart: unless-stopped
+    ports:
+    - '8081:80'
