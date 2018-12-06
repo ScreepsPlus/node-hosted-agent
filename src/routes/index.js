@@ -28,8 +28,7 @@ async function cors(res) {
 }
 
 function checkAuth(req) {
-  return 'ags131'
-  return req.headers['token-claim-user'] || false
+  return req.headers['token-claim-sub'] || req.headers['token-claim-user'] || false
 }
 
 async function unauthorized(res) {
