@@ -40,7 +40,7 @@ async function getRecord (req, res) {
   await cors(res)
   const username = await checkAuth(req)
   if (!username) {
-    return []
+    return unauthorized(res)
   }
   let records = await req.db.Config.findAll({ where: { username } })
   return records.map(cleanRecord)
