@@ -10,7 +10,7 @@ export default class WorkManager {
     if (this.workers[config.pk]) {
       await this.destroyWorker(config.pk)
     }
-    console.log(config.methodConfig)
+    console.log('Starting Worker', config.username, config.methodConfig)
     let conf = config.methodConfig || {}
     const api = new ScreepsAPI(config.screepsAPIConfig)
     const driver = new drivers.input[config.method](api, conf)

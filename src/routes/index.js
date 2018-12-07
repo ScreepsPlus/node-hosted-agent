@@ -28,7 +28,7 @@ async function cors(res) {
 }
 
 function checkAuth(req) {
-  return req.headers['token-claim-sub'] || req.headers['token-claim-user'] || false
+  return (req.headers['token-claim-sub'] || req.headers['token-claim-user'] || '').toLowerCase()
 }
 
 async function unauthorized(res) {

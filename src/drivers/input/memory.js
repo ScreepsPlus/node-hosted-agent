@@ -7,7 +7,6 @@ export default class Memory extends EventEmitter {
   }
 
   async start ({ shard, path, segment, interval }) {
-    console.log(path)
     await this.stop()
     this.interval = setInterval(() => this.tick(path, shard, segment), interval * 1000)
   }

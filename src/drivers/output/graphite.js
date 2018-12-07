@@ -31,7 +31,6 @@ class TCPConnection {
   }
   async write(data) {
     const sock = await this.connect()
-    console.log('write',data)
     sock.write(data)
   }
 }
@@ -47,7 +46,6 @@ export default async function handle ({ username, prefix = '' } = {}, { type, st
     for (const stat of stats) {
       let [, key, value, time] = stat.match(/^(\S+) ([\d.-]+) (\d+)$/) || []
       if (!key || !value || !time) {
-        console.log(stat, key, value, time)
         continue
       }
       if (Date.now() / 1000 < parseInt(time) - 1000) {
@@ -67,7 +65,7 @@ export default async function handle ({ username, prefix = '' } = {}, { type, st
       out.push(stat)
     }
   }
-  console.log(type)
+  console.log(`Writing ${out.length} stats for user ${username} with prefix '${prefix}'`)
   await conn.write(out.join("\n") + "\n")
 }
 
