@@ -4,6 +4,8 @@ export default (sequelize, DataTypes) => {
     screepsAPIConfig: { type: DataTypes.JSON },
     username: { type: DataTypes.STRING },
     method: { type: DataTypes.STRING },
-    methodConfig: { type: DataTypes.JSON }
+    methodConfig: { type: DataTypes.JSON },
+    lastErrorText: { type: DataTypes.STRING },
+    lastErrorTime: { type: DataTypes.DATE, defaultValue: DataTypes.NOW }
   })
 }

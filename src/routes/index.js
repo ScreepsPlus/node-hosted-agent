@@ -70,10 +70,15 @@ async function updateRecord (req, res) {
   if (config.screepsAPIConfig && config.screepsAPIConfig.password && config.screepsAPIConfig.password.match(/^\*{8}$/)) {
     delete config.screepsAPIConfig
   }
+  config.lastErrorText = ''
   await req.db.Config.update(config, { where: { pk: config.pk, username } })
   const record = await req.db.Config.find({ where: { pk: config.pk, username } })
   await req.workManager.destroyWorker({ pk: config.pk })
-  await req.workManager.createWorker(record)
+  try {
+    await req.workManager.createWorker(record)
+  } catch(e) {
+    await record.update({ lastErrorText: e.toString(), lastErrorTime: Date.now() })
+  }
   return cleanRecord(record)
 }
 

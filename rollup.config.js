@@ -12,7 +12,7 @@ export default {
     exports: 'named',
     sourcemap: true
   },
-  external: ['sequelize', 'micro', 'micro-route/dispatch', 'net', 'fs', 'http', 'screeps-api', 'axios', 'events', 'path', 'ws', 'node-fetch'],
+  external: ['umzug','sequelize', 'micro', 'micro-route/dispatch', 'net', 'fs', 'http', 'screeps-api', 'axios', 'events', 'path', 'ws', 'node-fetch'],
   plugins: [
     // builtins(),
     resolve({

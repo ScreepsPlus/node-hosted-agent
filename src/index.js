@@ -1,5 +1,6 @@
 import path from 'path'
 import Sequelize from 'sequelize'
+import Umzug from 'umzug'
 
 import routes from './routes'
 
@@ -24,7 +25,19 @@ const Config = ConfigModel(sequelize, Sequelize)
 const workManager = new WorkManager()
 
 async function setup (fn) {
-  await Config.sync()
+  const umzug = new Umzug({
+    storage: "sequelize",
+    storageOptions: { sequelize },
+    migrations: {
+      params: [
+        sequelize.getQueryInterface(),
+        Sequelize
+      ],
+      path: path.join(__dirname, "../migrations")
+    }
+  })
+  console.log('Running Migrations')
+  await umzug.up()
   await startAll()
   return function (req, res) {
     req.db = { Config }
@@ -38,9 +51,20 @@ async function startAll () {
   let configs = await Config.findAll()
   configs.forEach(async config => {
     try {
-      await workManager.createWorker(config)
+      const worker = await workManager.createWorker(config)
+      worker.on('error', e => {
+        writeError(config, e).catch(console.error)
+      })
     } catch (err) {
       console.error('Cannot create worker', config.pk, err)
+      await writeError(config, err)
     }
+  })
+}
+
+async function writeError(config, error) {
+  await config.update({
+    lastErrorText: error.toString(),
+    lastErrorTime: Date.now()
   })
 }
