@@ -64,11 +64,16 @@ async function updateRecord (req, res) {
   const username = await checkAuth(req)
   if (!username) return unauthorized(res)
   let config = await json(req)
-  if (config.screepsAPIConfig && config.screepsAPIConfig.token && config.screepsAPIConfig.token.includes('*')) {
-    delete config.screepsAPIConfig
-  }
-  if (config.screepsAPIConfig && config.screepsAPIConfig.password && config.screepsAPIConfig.password.match(/^\*{8}$/)) {
-    delete config.screepsAPIConfig
+  if (config.screepsAPIConfig) {
+    if (config.screepsAPIConfig.privateServer) {
+      if (config.screepsAPIConfig.password && config.screepsAPIConfig.password.match(/^\*{8}$/)) {
+        delete config.screepsAPIConfig
+      }
+    } else {
+      if (config.screepsAPIConfig.token && config.screepsAPIConfig.token.includes('*')) {
+        delete config.screepsAPIConfig
+      }
+    }
   }
   config.lastErrorText = ''
   await req.db.Config.update(config, { where: { pk: config.pk, username } })
