@@ -17,7 +17,8 @@ const sequelize = new Sequelize(process.env.DB_DATABASE || 'agent', process.env.
     acquire: 30000,
     idle: 10000
   },
-  storage: process.env.DB_PATH || path.join(__dirname, '../agent.sqlite')
+  storage: process.env.DB_PATH || path.join(__dirname, '../agent.sqlite'),
+  logging: process.env.NODE_ENV === 'production' ? () => {} : console.log
 })
 
 const Config = ConfigModel(sequelize, Sequelize)
@@ -26,14 +27,14 @@ const workManager = new WorkManager()
 
 async function setup (fn) {
   const umzug = new Umzug({
-    storage: "sequelize",
+    storage: 'sequelize',
     storageOptions: { sequelize },
     migrations: {
       params: [
         sequelize.getQueryInterface(),
         Sequelize
       ],
-      path: path.join(__dirname, "../migrations")
+      path: path.join(__dirname, '../migrations')
     }
   })
   console.log('Running Migrations')
@@ -62,7 +63,7 @@ async function startAll () {
   })
 }
 
-async function writeError(config, error) {
+async function writeError (config, error) {
   await config.update({
     lastErrorText: error.toString(),
     lastErrorTime: Date.now()

@@ -1700,13 +1700,6 @@ fast-levenshtein@~2.0.4:
   resolved "https://registry.yarnpkg.com/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz#3d8a5c66883a16a30ca8643e851f19baa7797917"
   integrity sha1-PYpcZog6FqMMqGQ+hR8Zuqd5eRc=
 
-fetch-ponyfill@^6.0.2:
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/fetch-ponyfill/-/fetch-ponyfill-6.0.2.tgz#bc2d92afd0140e39518beccd2fd0682ab4491cb6"
-  integrity sha512-hBWVb6Z0chjr9r0g4N5uknldAnyFstWTnX6oFxMsL9ZlSL7fa66Keis3y4SCMgpTggY4GeGbB4z3z5g5SmrgkQ==
-  dependencies:
-    node-fetch "~2.1.0"
-
 figures@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/figures/-/figures-2.0.0.tgz#3ab1a2d2a62c8bfb431a0c94cb797a2fce27c962"
@@ -3339,16 +3332,6 @@ node-abi@^2.2.0:
   dependencies:
     semver "^5.4.1"
 
-node-fetch@^2.1.2:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.3.0.tgz#1a1d940bbfb916a1d3e0219f037e89e71f8c5fa5"
-  integrity sha512-MOd8pV3fxENbryESLgVIeaGKrdl+uaYhCSSVkjeOb/31/njTpcis5aWfdqgNlHIrKOLRbMnfPINPOML2CIFeXA==
-
-node-fetch@~2.1.0:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.1.2.tgz#ab884e8e7e57e38a944753cec706f788d1768bb5"
-  integrity sha1-q4hOjn5X44qUR1POxwb3iNF2i7U=
-
 node-gyp@~3.6.0:
   version "3.6.3"
   resolved "https://registry.yarnpkg.com/node-gyp/-/node-gyp-3.6.3.tgz#369fcb09146ae2167f25d8d23d8b49cc1a110d8d"
@@ -4644,15 +4627,15 @@ sax@^1.2.4:
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
   integrity sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==
 
-screeps-api@^1.4.0:
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/screeps-api/-/screeps-api-1.7.2.tgz#78fde8d61b3d4f19cb329c72ab5805f0f59d19f0"
-  integrity sha1-eP3o1hs9TxnLMpxyq1gF8PWdGfA=
+screeps-api@^1.9.1:
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/screeps-api/-/screeps-api-1.9.1.tgz#055ce1ae3e879d42fcd01e74c8b743819ba22cd7"
+  integrity sha512-evXOBeOvbMtCNyzFOrfnv8gJJ4Wt10ThvaUSXTbsi136hqXI5FHvr12qbdrnufXcTV4JlF1aupAY5alt6mC03Q==
   dependencies:
+    axios "^0.18.0"
     bluebird "^3.5.0"
     commander "^2.15.1"
-    fetch-ponyfill "^6.0.2"
-    node-fetch "^2.1.2"
+    debug "^4.1.1"
     ws "^5.2.0"
     yamljs "^0.3.0"
   optionalDependencies:

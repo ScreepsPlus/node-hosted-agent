@@ -3,7 +3,7 @@ import net from 'net'
 import { Agent } from 'http'
 
 class TCPConnection {
-  constructor(host, port) {
+  constructor (host, port) {
     this.port = port
     this.host = host
     this.connecting = null
@@ -25,11 +25,11 @@ class TCPConnection {
         })
         this.connecting = null
         resolve(sock)
-      })      
+      })
     })
     return this.connecting
   }
-  async write(data) {
+  async write (data) {
     const sock = await this.connect()
     sock.write(data)
   }
@@ -42,13 +42,14 @@ export default async function handle ({ username, prefix = '' } = {}, { type, st
   const out = []
   if (prefix && !prefix.endsWith('.')) prefix += '.'
   if (type.match(/^text\/gra(phite|fana)$/)) {
-    stats = stats.split("\n").filter(Boolean)
+    stats = stats.split('\n').filter(Boolean)
     for (const stat of stats) {
       let [, key, value, time] = stat.match(/^(\S+) ([\d.-]+) (\d+)$/) || []
       if (!key || !value || !time) {
         continue
       }
-      if (Date.now() / 1000 < parseInt(time) - 1000) {
+      time = parseInt(time)
+      if (Date.now() / 1000 < time - 1000) {
         time /= 1000
       }
       value = parseFloat(value)
@@ -58,19 +59,21 @@ export default async function handle ({ username, prefix = '' } = {}, { type, st
   }
   if (type === 'application/json') {
     const ts = Math.round(Date.now() / 1000)
-    const data = flattenObj({}, `screeps.${username}`, stats)
-    for(const key in data) {
+    let pre = `screeps.${username}.${prefix}`
+    if (pre.endsWith('.')) pre = pre.slice(0, -1)
+    const data = flattenObj({}, pre, stats)
+    for (const key in data) {
       const value = Math.round(parseFloat(data[key]) * 1000) / 1000
-      const stat = `${prefix}${key} ${value} ${ts}`
+      const stat = `${key} ${value} ${ts}`
       out.push(stat)
     }
   }
   console.log(`Writing ${out.length} stats for user ${username} with prefix '${prefix}'`)
-  await conn.write(out.join("\n") + "\n")
+  await conn.write(out.join('\n') + '\n')
 }
 
 function flattenObj (ret, path, obj) {
-  if (typeof obj == 'object') {
+  if (typeof obj === 'object') {
     for (let k in obj) {
       flattenObj(ret, `${path}.${k}`, obj[k])
     }

@@ -6,7 +6,7 @@
   "author": "Adam Shumann <ashumann13@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "test": "standard src",
+    "test": "standard src/**/*.js",
     "start": "micro",
     "dev": "micro-dev --port 8080 -w dist",
     "2npm": "publish",
@@ -22,7 +22,7 @@
     "micro": "^9.1.4",
     "micro-route": "^2.5.0",
     "mysql2": "^1.6.4",
-    "screeps-api": "^1.4.0",
+    "screeps-api": "^1.9.1",
     "sequelize": "^5.15.1",
     "sqlite3": "^4.0.0",
     "umzug": "^2.2.0"
