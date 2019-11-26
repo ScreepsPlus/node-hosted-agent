@@ -57,7 +57,7 @@ async function startAll () {
         writeError(config, e).catch(console.error)
       })
     } catch (err) {
-      console.error('Cannot create worker', config.pk, err)
+      console.error(`Cannot create worker ${config.pk} (${config.username})`, err)
       await writeError(config, err)
     }
   })

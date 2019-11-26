@@ -3,20 +3,23 @@ import drivers from './drivers'
 import { EventEmitter } from 'events'
 
 export class Worker extends EventEmitter {
-  constructor() {
+  constructor () {
     super()
     this.output = drivers.output.Graphite
   }
   async start (config) {
     let conf = config.methodConfig || {}
     const api = new ScreepsAPI(config.screepsAPIConfig)
+    if (config.screepsAPIConfig.privateServer) {
+      await api.auth(config.screepsAPIConfig.username, config.screepsAPIConfig.password)
+    }
     const driver = this.driver = new drivers.input[config.method](api, conf)
     driver.on('stats', async (stats) => {
       try {
-        if(!stats) {
+        if (!stats) {
           let err = 'No stats returned'
-          if(config.method === 'memory') {
-            if(conf.segment) {
+          if (config.method === 'memory') {
+            if (conf.segment) {
               err += ` for segment ${conf.segment} (Is it empty?)`
             } else {
               err += ` for Memory.${conf.path} (Does it exist?)`
@@ -27,7 +30,7 @@ export class Worker extends EventEmitter {
         stats = await this.formatStats(stats)
         await this.output({ username: config.username, prefix: conf.prefix }, stats)
       } catch (e) {
-        console.error(`Error handling stats for ${config.pk}`, e)
+        console.error(`Error handling stats for ${config.pk} (${config.username})`, e)
         this.emit('error', e)
       }
     })
@@ -61,6 +64,7 @@ export default class WorkManager {
     if (this.workers[config.pk]) {
       await this.destroyWorker(config.pk)
     }
+    await new Promise(resolve => setTimeout(resolve, Math.floor(Math.random() * 5000)))
     console.log('Starting Worker', config.username, config.methodConfig)
     const worker = new Worker()
     await worker.start(config)
@@ -69,7 +73,7 @@ export default class WorkManager {
   }
   async destroyWorker (pk) {
     const worker = this.workers[pk]
-    if (worker)  {
+    if (worker) {
       console.log('Stopping Worker')
       await worker.stop()
       delete this.workers[pk]

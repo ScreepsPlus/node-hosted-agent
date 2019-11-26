@@ -1,6 +1,4 @@
-import axios from 'axios'
 import net from 'net'
-import { Agent } from 'http'
 
 class TCPConnection {
   constructor (host, port) {
