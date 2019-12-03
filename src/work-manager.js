@@ -9,6 +9,7 @@ export class Worker extends EventEmitter {
   }
   async start (config) {
     let conf = config.methodConfig || {}
+    config.screepsAPIConfig.experimentalRetry429 = true
     const api = new ScreepsAPI(config.screepsAPIConfig)
     if (config.screepsAPIConfig.privateServer) {
       await api.auth(config.screepsAPIConfig.username, config.screepsAPIConfig.password)

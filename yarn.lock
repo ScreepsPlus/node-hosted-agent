@@ -4627,10 +4627,10 @@ sax@^1.2.4:
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
   integrity sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==
 
-screeps-api@^1.9.1:
-  version "1.9.1"
-  resolved "https://registry.yarnpkg.com/screeps-api/-/screeps-api-1.9.1.tgz#055ce1ae3e879d42fcd01e74c8b743819ba22cd7"
-  integrity sha512-evXOBeOvbMtCNyzFOrfnv8gJJ4Wt10ThvaUSXTbsi136hqXI5FHvr12qbdrnufXcTV4JlF1aupAY5alt6mC03Q==
+screeps-api@^1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/screeps-api/-/screeps-api-1.10.0.tgz#37a86e1926d4f9d31213ad6710ac64ddfc0b8786"
+  integrity sha512-67bsmhwRrW8XbNzp8SVGUzLL/nFSEzUZNJp0WFFQKMDxG3cNcr1zzACAHe3gjpZq0jjY0ixvLwUZfBIFmErlvQ==
   dependencies:
     axios "^0.18.0"
     bluebird "^3.5.0"
