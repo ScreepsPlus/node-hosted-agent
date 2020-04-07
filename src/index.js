@@ -8,7 +8,6 @@ import WorkManager from './work-manager'
 import ConfigModel from './models/config'
 
 const sequelize = new Sequelize(process.env.DB_DATABASE || 'agent', process.env.DB_USER || 'username', process.env.DB_PASS || 'password', {
-  operatorsAliases: false,
   host: process.env.DB_HOST || 'localhost',
   dialect: process.env.DB_DIALECT || 'sqlite',
   pool: {
