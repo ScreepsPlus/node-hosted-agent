@@ -11,10 +11,11 @@ const sequelize = new Sequelize(process.env.DB_DATABASE || 'agent', process.env.
   host: process.env.DB_HOST || 'localhost',
   dialect: process.env.DB_DIALECT || 'sqlite',
   pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
+    max: 40,
+    min: 5,
+    acquire: 20000,
+    idle: 20000,
+    evict: 30000
   },
   storage: process.env.DB_PATH || path.join(__dirname, '../agent.sqlite'),
   logging: process.env.NODE_ENV === 'production' ? () => {} : console.log
@@ -23,6 +24,10 @@ const sequelize = new Sequelize(process.env.DB_DATABASE || 'agent', process.env.
 const Config = ConfigModel(sequelize, Sequelize)
 
 const workManager = new WorkManager()
+
+const slowModes = {}
+const lastRuns = {}
+const queue = []
 
 async function setup (fn) {
   const umzug = new Umzug({
@@ -38,33 +43,19 @@ async function setup (fn) {
   })
   console.log('Running Migrations')
   await umzug.up()
-  await startAll()
+  syncConfigs()
+  setInterval(() => {
+    syncConfigs()
+  }, 5000);
   return function (req, res) {
     req.db = { Config }
     req.workManager = workManager
     return fn(req, res)
   }
 }
+
 module.exports = setup(routes)
-
-async function startAll () {
-  let configs = await Config.findAll()
-  configs.forEach(async config => {
-    try {
-      const worker = await workManager.createWorker(config)
-      worker.on('error', e => {
-        writeError(config, e).catch(console.error)
-      })
-    } catch (err) {
-      console.error(`Cannot create worker ${config.pk} (${config.username})`, err)
-      await writeError(config, err)
-    }
-  })
-}
-
-async function writeError (config, error) {
-  await config.update({
-    lastErrorText: error.toString(),
-    lastErrorTime: Date.now()
-  })
+async function syncConfigs() {
+  workManager.configs = await Config.findAll()
+  console.log(`Synced ${workManager.configs.length} agents`)
 }

@@ -6,24 +6,26 @@ export default class Memory extends EventEmitter {
     this.api = api
   }
 
-  async start ({ shard, path, segment, interval }) {
+  async start ({ shards, path, segment, interval }) {
     await this.stop()
-    this.interval = setInterval(() => this.tick(path, shard, segment), interval * 1000)
+    this.interval = setInterval(() => this.tick(path, shards, segment), interval * 1000)
   }
 
   async stop () {
     clearInterval(this.interval)
   }
 
-  async tick (path, shard, segment) {
+  async tick (path, shards, segment) {
     try {
       let ret
-      if (segment) {
-        ret = await this.api.memory.segment.get(segment, shard)
-      } else {
-        ret = await this.api.memory.get(path, shard)
-      }
-      this.emit('stats', ret.data)
+      const rets = await Promise.all(shards.map(shard => {
+        if (segment) {
+          return this.api.memory.segment.get(segment, shard)
+        } else {
+          return this.api.memory.get(path, shard)
+        }
+      }))
+      rets.forEach(ret => this.emit('stats', ret.data))
     } catch (e) {
       this.emit('error', e)
     }
