@@ -20,8 +20,11 @@ export default class Console extends EventEmitter {
     await this.api.socket.unsubscribe('console')
   }
 
-  handleConsole ({ data: { shard = 'shard0', messages: { log = [] } = {} } = {} } = {}) {
-    if (this.config.shard && shard !== this.config.shard) return
+  handleConsole ({ data: { shard = 'shard0', messages: { log = [], error = '' } = {}, results = [] } = {} } = {}) {
+    if (this.config.shards.length && !this.config.shards.includes(shard)) return
+    if (log.length) {
+      this.emit('logs', log)
+    }
     log
       .filter(l => l.startsWith('STATS'))
       .map(log => log.slice(6).replace(/;/g, '\n'))

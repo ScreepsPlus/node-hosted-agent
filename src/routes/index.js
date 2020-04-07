@@ -57,7 +57,7 @@ async function createRecord (req, res) {
   let cnt = await req.db.Config.count({ where: { username } })
   if (cnt >= AGENT_LIMIT) return send(403, { error: 'Agent Limit Reached' })
   let record = await req.db.Config.create(config)
-  await req.workManager.createWorker(record)
+  // await req.workManager.createWorker(record)
   return cleanRecord(record)
 }
 
@@ -80,12 +80,12 @@ async function updateRecord (req, res) {
   config.lastErrorText = ''
   await req.db.Config.update(config, { where: { pk: config.pk, username } })
   const record = await req.db.Config.findOne({ where: { pk: config.pk, username } })
-  await req.workManager.destroyWorker({ pk: config.pk })
-  try {
-    await req.workManager.createWorker(record)
-  } catch (e) {
-    await record.update({ lastErrorText: e.toString(), lastErrorTime: Date.now() })
-  }
+  // await req.workManager.destroyWorker({ pk: config.pk })
+  // try {
+  //   await req.workManager.createWorker(record)
+  // } catch (e) {
+  //   await record.update({ lastErrorText: e.toString(), lastErrorTime: Date.now() })
+  // }
   return cleanRecord(record)
 }
 
@@ -96,7 +96,7 @@ async function deleteRecord (req, res, { params: { pk } = {} }) {
   if (!pk) {
     return { error: 'Must provide pk' }
   }
-  await req.workManager.destroyWorker(pk)
+  // await req.workManager.destroyWorker(pk)
   const cnt = await req.db.Config.destroy({ where: { pk, username } })
   return { deleted: cnt }
 }
