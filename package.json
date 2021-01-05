@@ -16,7 +16,7 @@
     "screepsplus-hosted-agent": "dist/index.js"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "bluebird": "^3.5.1",
     "fs-router": "^0.4.1",
     "micro": "^9.1.4",
