@@ -44,6 +44,13 @@
           <label>Interval (Should be 60 for Memory, 15 for segment)</label>
           <input type="number" ng-model="conf.methodOptions.interval" value="60">
         </div>
+        <div>
+          <label>Output</label>
+          <select ng-model="conf.output">
+            <option value="graphite">Graphite</option>
+            <option value="influxdb">InfluxDB</option>
+          </select>
+        </div>
       </div>
     </div>
     <script>
@@ -69,6 +76,7 @@
                 segment: '',
                 interval: 60
               },
+              output: 'graphite',
               create: true
             })
           }

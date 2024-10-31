@@ -5,12 +5,12 @@ import { EventEmitter } from 'events'
 export class Worker extends EventEmitter {
   constructor() {
     super()
-    this.output = drivers.output.Graphite
   }
   async start (config) {
     let conf = config.methodConfig || {}
     const api = new ScreepsAPI(config.screepsAPIConfig)
     const driver = this.driver = new drivers.input[config.method](api, conf)
+    const output = this.output = drivers.output[config.output || 'graphite']
     driver.on('stats', async (stats) => {
       try {
         if(!stats) {

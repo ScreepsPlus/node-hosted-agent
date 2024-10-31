@@ -1,9 +1,11 @@
-import Console from './console'
-import ScreepsPlus from './screepsplus'
-import Graphite from './graphite'
+import console from './console'
+import screepsplus from './screepsplus'
+import graphite from './graphite'
+import influxdb from './influxdb'
 
 export default {
-  Console,
-  ScreepsPlus,
-  Graphite
+  console,
+  screepsplus,
+  graphite,
+  influxdb
 }

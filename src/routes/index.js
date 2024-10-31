@@ -28,6 +28,7 @@ async function cors(res) {
 }
 
 function checkAuth(req) {
+  if (process.env.DEBUG_USER) return process.env.DEBUG_USER
   return (req.headers['token-claim-sub'] || req.headers['token-claim-user'] || '').toLowerCase()
 }
 

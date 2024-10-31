@@ -48,7 +48,8 @@ export default async function handle ({ username, prefix = '' } = {}, { type, st
       if (!key || !value || !time) {
         continue
       }
-      if (Date.now() / 1000 < parseInt(time) - 1000) {
+      time = parseInt(time)
+      if (Date.now() / 1000 < time - 1000) {
         time /= 1000
       }
       value = parseFloat(value)
@@ -58,10 +59,12 @@ export default async function handle ({ username, prefix = '' } = {}, { type, st
   }
   if (type === 'application/json') {
     const ts = Math.round(Date.now() / 1000)
-    const data = flattenObj({}, `screeps.${username}`, stats)
+    let pre = `screeps.${username}.${prefix}`
+    if(pre.endsWith('.')) pre = pre.slice(0,-1)
+    const data = flattenObj({}, pre, stats)
     for(const key in data) {
       const value = Math.round(parseFloat(data[key]) * 1000) / 1000
-      const stat = `${prefix}${key} ${value} ${ts}`
+      const stat = `${key} ${value} ${ts}`
       out.push(stat)
     }
   }
